@@ -65,6 +65,16 @@ services:
     networks:
       - lab_network
 
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: lab_tunnel
+    restart: always
+    command: tunnel --no-autoupdate --url http://frontend:80
+    depends_on:
+      - frontend
+    networks:
+      - lab_network
+
 volumes:
   pg_data:
 
