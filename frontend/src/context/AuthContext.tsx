@@ -40,14 +40,7 @@ function normalizeUser(value: unknown): User | null {
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('lab_user');
-    try {
-      return saved ? normalizeUser(JSON.parse(saved)) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('lab_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -60,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const profile = normalizeUser(res.data);
           if (!profile) throw new Error('El perfil recibido no tiene el formato esperado.');
           setUser(profile);
-          localStorage.setItem('lab_user', JSON.stringify(profile));
         } catch {
           logout();
         }
@@ -80,7 +72,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     localStorage.setItem('lab_token', access_token);
-    localStorage.setItem('lab_user', JSON.stringify(loggedUser));
 
     setToken(access_token);
     setUser(loggedUser);
@@ -100,7 +91,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const profile = normalizeUser(res.data);
       if (!profile) throw new Error('El perfil recibido no tiene el formato esperado.');
       setUser(profile);
-      localStorage.setItem('lab_user', JSON.stringify(profile));
     } catch (e) {
       console.error('Error al actualizar perfil:', e);
     }
