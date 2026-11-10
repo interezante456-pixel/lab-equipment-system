@@ -62,7 +62,7 @@ export const Catalog: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchCatalog();
+    void fetchCatalog();
   }, [selectedCategory, searchQuery]);
 
   const handleOpenReserve = (eq: Equipment) => {
@@ -93,7 +93,7 @@ export const Catalog: React.FC = () => {
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       setTimeout(() => {
         setIsReserveModalOpen(false);
-        fetchCatalog();
+        void fetchCatalog();
       }, 1800);
     } catch (err: any) {
       setReservationError(err.response?.data?.message || 'Error al procesar la reserva');
@@ -319,10 +319,11 @@ export const Catalog: React.FC = () => {
 
             {/* Selector de Fecha */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="reservation-date" className="block text-xs font-semibold text-slate-300 mb-1">
                 Fecha de la Práctica
               </label>
               <input
+                id="reservation-date"
                 type="date"
                 required
                 value={reserveDate}
@@ -335,10 +336,11 @@ export const Catalog: React.FC = () => {
             {/* Rango Horario */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="reservation-start-time" className="block text-xs font-semibold text-slate-300 mb-1">
                   Hora de Inicio
                 </label>
                 <input
+                  id="reservation-start-time"
                   type="time"
                   required
                   value={startTime}
@@ -347,10 +349,11 @@ export const Catalog: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label htmlFor="reservation-end-time" className="block text-xs font-semibold text-slate-300 mb-1">
                   Hora de Fin (Devolución)
                 </label>
                 <input
+                  id="reservation-end-time"
                   type="time"
                   required
                   value={endTime}
@@ -362,10 +365,11 @@ export const Catalog: React.FC = () => {
 
             {/* Motivo o Curso */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="reservation-notes" className="block text-xs font-semibold text-slate-300 mb-1">
                 Curso / Propósito de la Práctica (Opcional)
               </label>
               <textarea
+                id="reservation-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Ej: Laboratorio de Redes Industriales - Práctica 4"

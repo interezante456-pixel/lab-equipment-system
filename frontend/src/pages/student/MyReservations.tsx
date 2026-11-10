@@ -34,7 +34,7 @@ export const MyReservations: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchReservations();
+    void fetchReservations();
   }, []);
 
   const handleCancel = async (id: string) => {
@@ -42,7 +42,7 @@ export const MyReservations: React.FC = () => {
     try {
       await api.patch(`/reservations/${id}/cancel`);
       setActionMessage('Reserva cancelada correctamente');
-      fetchReservations();
+      void fetchReservations();
       setTimeout(() => setActionMessage(null), 3000);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al cancelar la reserva');

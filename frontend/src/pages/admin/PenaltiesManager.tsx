@@ -35,7 +35,7 @@ export const PenaltiesManager: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchPenalties();
+    void fetchPenalties();
   }, []);
 
   const handleConfirmLift = async (e: React.FormEvent) => {
@@ -50,7 +50,7 @@ export const PenaltiesManager: React.FC = () => {
       setActionSuccess(`Penalización levantada para ${liftingPenalty.user?.fullName}. El estudiante vuelve a estar habilitado.`);
       setLiftingPenalty(null);
       setLiftReason('');
-      fetchPenalties();
+      void fetchPenalties();
       setTimeout(() => setActionSuccess(null), 3500);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al levantar penalización');
@@ -205,10 +205,11 @@ export const PenaltiesManager: React.FC = () => {
           </p>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="penalty-lift-reason" className="block text-xs font-semibold text-slate-300 mb-1">
               Justificación / Sustento Oficial (Obligatorio)
             </label>
             <textarea
+              id="penalty-lift-reason"
               required
               rows={3}
               value={liftReason}

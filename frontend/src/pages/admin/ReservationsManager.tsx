@@ -38,14 +38,14 @@ export const ReservationsManager: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchPending();
+    void fetchPending();
   }, []);
 
   const handleApprove = async (res: Reservation) => {
     try {
       await api.patch(`/reservations/${res.id}/approve`);
       setFeedbackMessage({ text: `Reserva para ${res.equipment?.name} aprobada exitosamente.`, type: 'success' });
-      fetchPending();
+      void fetchPending();
       setTimeout(() => setFeedbackMessage(null), 3500);
     } catch (err: any) {
       setFeedbackMessage({ text: err.response?.data?.message || 'Error al aprobar', type: 'error' });
@@ -64,7 +64,7 @@ export const ReservationsManager: React.FC = () => {
       setFeedbackMessage({ text: `Reserva rechazada y justificación enviada al estudiante.`, type: 'success' });
       setRejectingReservation(null);
       setRejectionReason('');
-      fetchPending();
+      void fetchPending();
       setTimeout(() => setFeedbackMessage(null), 3500);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al rechazar');
@@ -214,10 +214,11 @@ export const ReservationsManager: React.FC = () => {
           </p>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="reservation-rejection-reason" className="block text-xs font-semibold text-slate-300 mb-1">
               Motivo del Rechazo (Obligatorio)
             </label>
             <textarea
+              id="reservation-rejection-reason"
               required
               rows={3}
               value={rejectionReason}

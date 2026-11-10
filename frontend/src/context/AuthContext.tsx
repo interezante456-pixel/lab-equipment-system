@@ -13,10 +13,40 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function normalizeUser(value: unknown): User | null {
+  if (!value || typeof value !== 'object') return null;
+
+  const candidate = value as Record<string, unknown>;
+  if (
+    typeof candidate.id !== 'string' ||
+    typeof candidate.studentCode !== 'string' ||
+    typeof candidate.fullName !== 'string' ||
+    typeof candidate.email !== 'string' ||
+    (candidate.role !== 'STUDENT' && candidate.role !== 'ADMIN') ||
+    (candidate.studentStatus !== 'ACTIVE' && candidate.studentStatus !== 'PENALIZED')
+  ) {
+    return null;
+  }
+
+  return {
+    id: candidate.id,
+    studentCode: candidate.studentCode,
+    fullName: candidate.fullName,
+    email: candidate.email,
+    role: candidate.role,
+    studentStatus: candidate.studentStatus,
+    ...(typeof candidate.career === 'string' && { career: candidate.career }),
+  };
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('lab_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      return saved ? normalizeUser(JSON.parse(saved)) : null;
+    } catch {
+      return null;
+    }
   });
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('lab_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -27,8 +57,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (storedToken) {
         try {
           const res = await api.get('/auth/profile');
-          setUser(res.data);
-          localStorage.setItem('lab_user', JSON.stringify(res.data));
+          const profile = normalizeUser(res.data);
+          if (!profile) throw new Error('El perfil recibido no tiene el formato esperado.');
+          setUser(profile);
+          localStorage.setItem('lab_user', JSON.stringify(profile));
         } catch {
           logout();
         }
@@ -36,12 +68,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading(false);
     };
 
-    initAuth();
+    void initAuth();
   }, []);
 
   const login = async (studentCode: string, password: string): Promise<User> => {
     const response = await api.post('/auth/login', { studentCode, password });
-    const { access_token, user: loggedUser } = response.data;
+    const { access_token, user: rawUser } = response.data;
+    const loggedUser = normalizeUser(rawUser);
+    if (typeof access_token !== 'string' || !loggedUser) {
+      throw new Error('La respuesta de autenticación no tiene el formato esperado.');
+    }
 
     localStorage.setItem('lab_token', access_token);
     localStorage.setItem('lab_user', JSON.stringify(loggedUser));
@@ -61,8 +97,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshProfile = async () => {
     try {
       const res = await api.get('/auth/profile');
-      setUser(res.data);
-      localStorage.setItem('lab_user', JSON.stringify(res.data));
+      const profile = normalizeUser(res.data);
+      if (!profile) throw new Error('El perfil recibido no tiene el formato esperado.');
+      setUser(profile);
+      localStorage.setItem('lab_user', JSON.stringify(profile));
     } catch (e) {
       console.error('Error al actualizar perfil:', e);
     }

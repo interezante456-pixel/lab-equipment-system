@@ -56,7 +56,7 @@ export const UsersCRUD: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    void fetchUsers();
   }, [roleFilter, search]);
 
   const handleOpenCreate = () => {
@@ -90,7 +90,7 @@ export const UsersCRUD: React.FC = () => {
       await api.post('/users', formData);
       setIsCreateModalOpen(false);
       setActionSuccess(`Usuario ${formData.fullName} registrado correctamente.`);
-      fetchUsers();
+      void fetchUsers();
       setTimeout(() => setActionSuccess(null), 3500);
     } catch (err: any) {
       setFormError(err.response?.data?.message || 'Error al crear el usuario');
@@ -102,7 +102,7 @@ export const UsersCRUD: React.FC = () => {
     try {
       await api.patch(`/users/${user.id}/unlock`);
       setActionSuccess(`Cuenta de ${user.fullName} (${user.studentCode}) desbloqueada con éxito.`);
-      fetchUsers();
+      void fetchUsers();
       setTimeout(() => setActionSuccess(null), 3500);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al desbloquear cuenta');
@@ -305,10 +305,11 @@ export const UsersCRUD: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="user-role" className="block text-xs font-semibold text-slate-300 mb-1">
                 Rol del Usuario
               </label>
               <select
+                id="user-role"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
                 className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 text-xs focus:ring-2 focus:ring-brand-500"
@@ -319,10 +320,11 @@ export const UsersCRUD: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="user-student-code" className="block text-xs font-semibold text-slate-300 mb-1">
                 Código Institucional
               </label>
               <input
+                id="user-student-code"
                 type="text"
                 required
                 value={formData.studentCode}
@@ -334,10 +336,11 @@ export const UsersCRUD: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="user-full-name" className="block text-xs font-semibold text-slate-300 mb-1">
               Nombre Completo
             </label>
             <input
+              id="user-full-name"
               type="text"
               required
               value={formData.fullName}
@@ -348,10 +351,11 @@ export const UsersCRUD: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="user-email" className="block text-xs font-semibold text-slate-300 mb-1">
               Correo Institucional
             </label>
             <input
+              id="user-email"
               type="email"
               required
               value={formData.email}
@@ -363,10 +367,11 @@ export const UsersCRUD: React.FC = () => {
 
           {formData.role === 'STUDENT' && (
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="user-career" className="block text-xs font-semibold text-slate-300 mb-1">
                 Carrera / Escuela Profesional
               </label>
               <input
+                id="user-career"
                 type="text"
                 value={formData.career}
                 onChange={(e) => setFormData({ ...formData, career: e.target.value })}
@@ -377,10 +382,11 @@ export const UsersCRUD: React.FC = () => {
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="user-password" className="block text-xs font-semibold text-slate-300 mb-1">
               Contraseña Temporal
             </label>
             <input
+              id="user-password"
               type="text"
               required
               value={formData.password}
@@ -422,10 +428,11 @@ export const UsersCRUD: React.FC = () => {
           </p>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="user-reset-password" className="block text-xs font-semibold text-slate-300 mb-1">
               Nueva Contraseña
             </label>
             <input
+              id="user-reset-password"
               type="text"
               required
               value={newPasswordValue}

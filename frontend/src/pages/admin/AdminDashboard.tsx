@@ -32,7 +32,7 @@ export const AdminDashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMetrics();
+    void fetchMetrics();
   }, []);
 
   if (isLoading || !metrics) {

@@ -63,7 +63,7 @@ export const EquipmentCRUD: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchEquipments();
+    void fetchEquipments();
   }, [categoryFilter, search]);
 
   const handleOpenCreate = () => {
@@ -109,7 +109,7 @@ export const EquipmentCRUD: React.FC = () => {
         await api.post('/equipment', formData);
       }
       setIsCreateModalOpen(false);
-      fetchEquipments();
+      void fetchEquipments();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al guardar el equipo');
     }
@@ -134,7 +134,7 @@ export const EquipmentCRUD: React.FC = () => {
       eq.status === 'MANTENIMIENTO' ? 'DISPONIBLE' : 'MANTENIMIENTO';
     try {
       await api.patch(`/equipment/${eq.id}`, { status: nextStatus });
-      fetchEquipments();
+      void fetchEquipments();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al cambiar estado');
     }
@@ -295,10 +295,11 @@ export const EquipmentCRUD: React.FC = () => {
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="equipment-inventory-code" className="block text-xs font-semibold text-slate-300 mb-1">
                 Código de Inventario (Único)
               </label>
               <input
+                id="equipment-inventory-code"
                 type="text"
                 required
                 disabled={!!editingEquipment}
@@ -310,10 +311,11 @@ export const EquipmentCRUD: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="equipment-category" className="block text-xs font-semibold text-slate-300 mb-1">
                 Categoría Oficial
               </label>
               <select
+                id="equipment-category"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value as EquipmentCategory })}
                 className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 text-xs focus:ring-2 focus:ring-brand-500"
@@ -326,10 +328,11 @@ export const EquipmentCRUD: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="equipment-name" className="block text-xs font-semibold text-slate-300 mb-1">
               Nombre Descriptivo del Equipo
             </label>
             <input
+              id="equipment-name"
               type="text"
               required
               value={formData.name}
@@ -341,8 +344,9 @@ export const EquipmentCRUD: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Marca</label>
+              <label htmlFor="equipment-brand" className="block text-xs font-semibold text-slate-300 mb-1">Marca</label>
               <input
+                id="equipment-brand"
                 type="text"
                 required
                 value={formData.brand}
@@ -352,8 +356,9 @@ export const EquipmentCRUD: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Modelo</label>
+              <label htmlFor="equipment-model" className="block text-xs font-semibold text-slate-300 mb-1">Modelo</label>
               <input
+                id="equipment-model"
                 type="text"
                 required
                 value={formData.model}
@@ -363,8 +368,9 @@ export const EquipmentCRUD: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Número de Serie</label>
+              <label htmlFor="equipment-serial-number" className="block text-xs font-semibold text-slate-300 mb-1">Número de Serie</label>
               <input
+                id="equipment-serial-number"
                 type="text"
                 value={formData.serialNumber}
                 onChange={(e) => setFormData({ ...formData, serialNumber: e.target.value })}
@@ -376,10 +382,11 @@ export const EquipmentCRUD: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="equipment-location" className="block text-xs font-semibold text-slate-300 mb-1">
                 Ubicación Física en Laboratorio
               </label>
               <input
+                id="equipment-location"
                 type="text"
                 required
                 value={formData.location}
@@ -389,10 +396,11 @@ export const EquipmentCRUD: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label htmlFor="equipment-image-url" className="block text-xs font-semibold text-slate-300 mb-1">
                 URL de Imagen / Fotografía
               </label>
               <input
+                id="equipment-image-url"
                 type="text"
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
@@ -403,10 +411,11 @@ export const EquipmentCRUD: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label htmlFor="equipment-specifications" className="block text-xs font-semibold text-slate-300 mb-1">
               Especificaciones Técnicas Detalladas
             </label>
             <textarea
+              id="equipment-specifications"
               rows={2}
               value={formData.specifications}
               onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
