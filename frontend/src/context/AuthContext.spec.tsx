@@ -15,7 +15,7 @@ describe('AuthProvider', () => {
 
   it('restaura el perfil remoto cuando existe un token almacenado', async () => {
     localStorage.setItem('lab_token', 'test-token');
-    get.mockResolvedValue({ data: { id: 'u1', studentCode: 'N001234567', fullName: 'Ada', email: 'ada@labhub.edu', role: 'STUDENT', studentStatus: 'ACTIVE' } });
+    get.mockResolvedValue({ data: { id: 'u1', studentCode: 'N001234567', fullName: 'Ada', email: 'ada@labhub.edu', career: 'Sistemas', role: 'STUDENT', studentStatus: 'ACTIVE' } });
     render(<AuthProvider><Consumer /></AuthProvider>);
     expect(await screen.findByText('Ada')).toBeInTheDocument();
     expect(get).toHaveBeenCalledWith('/auth/profile');
@@ -28,5 +28,21 @@ describe('AuthProvider', () => {
     screen.getByRole('button', { name: 'login' }).click();
     expect(await screen.findByText('Ana')).toBeInTheDocument();
     expect(localStorage.getItem('lab_token')).toBe('token-prueba');
+  });
+
+  it.each([
+    ['un valor nulo', null],
+    ['un objeto sin id', { studentCode: 'N001234567', fullName: 'Ada', email: 'ada@labhub.edu', role: 'STUDENT', studentStatus: 'ACTIVE' }],
+    ['un código no textual', { id: 'u1', studentCode: 123, fullName: 'Ada', email: 'ada@labhub.edu', role: 'STUDENT', studentStatus: 'ACTIVE' }],
+    ['un nombre no textual', { id: 'u1', studentCode: 'N001234567', fullName: null, email: 'ada@labhub.edu', role: 'STUDENT', studentStatus: 'ACTIVE' }],
+    ['un correo no textual', { id: 'u1', studentCode: 'N001234567', fullName: 'Ada', email: null, role: 'STUDENT', studentStatus: 'ACTIVE' }],
+    ['un rol desconocido', { id: 'u1', studentCode: 'N001234567', fullName: 'Ada', email: 'ada@labhub.edu', role: 'ROOT', studentStatus: 'ACTIVE' }],
+    ['un estado desconocido', { id: 'u1', studentCode: 'N001234567', fullName: 'Ada', email: 'ada@labhub.edu', role: 'STUDENT', studentStatus: 'UNKNOWN' }],
+  ])('descarta el token cuando el perfil remoto contiene %s', async (_case, profile) => {
+    localStorage.setItem('lab_token', 'token-invalido');
+    get.mockResolvedValue({ data: profile });
+    render(<AuthProvider><Consumer /></AuthProvider>);
+    await waitFor(() => expect(screen.getByText('anonymous')).toBeInTheDocument());
+    expect(localStorage.getItem('lab_token')).toBeNull();
   });
 });
