@@ -64,7 +64,7 @@ export const DispatchReturns: React.FC = () => {
       if (isLate) {
         setActionAlert({ message, isLate: true });
       } else {
-        confetti({ particleCount: 60, spread: 50 });
+        void confetti({ particleCount: 60, spread: 50 });
         setActionAlert({ message, isLate: false });
       }
 

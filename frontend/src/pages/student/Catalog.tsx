@@ -90,7 +90,7 @@ export const Catalog: React.FC = () => {
       });
 
       setReservationSuccess(true);
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      void confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
       setTimeout(() => {
         setIsReserveModalOpen(false);
         void fetchCatalog();

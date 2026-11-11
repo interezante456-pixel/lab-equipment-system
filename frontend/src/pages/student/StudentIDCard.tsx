@@ -10,7 +10,7 @@ export const StudentIDCard: React.FC = () => {
 
   useEffect(() => {
     if (user?.studentCode) {
-      QRCode.toDataURL(
+      void QRCode.toDataURL(
         JSON.stringify({
           code: user.studentCode,
           name: user.fullName,
@@ -18,7 +18,12 @@ export const StudentIDCard: React.FC = () => {
           timestamp: Date.now(),
         }),
         { width: 280, margin: 2, color: { dark: '#0F172A', light: '#FFFFFF' } },
-      ).then(setQrDataUrl);
+      )
+        .then(setQrDataUrl)
+        .catch((error) => {
+          console.error('No se pudo generar el código QR del estudiante', error);
+          setQrDataUrl('');
+        });
     }
   }, [user]);
 
