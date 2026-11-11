@@ -17,8 +17,8 @@ export const NotificationDropdown: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 20000); // Polling cada 20s
+    void fetchNotifications();
+    const interval = setInterval(() => void fetchNotifications(), 20000); // Polling cada 20s
     return () => clearInterval(interval);
   }, []);
 

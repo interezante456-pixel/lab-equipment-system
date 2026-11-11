@@ -36,4 +36,4 @@ async function bootstrap() {
   console.log(`🚀 Servidor backend de Laboratorio corriendo en: http://localhost:${port}/api`);
 }
 
-bootstrap();
+void bootstrap();

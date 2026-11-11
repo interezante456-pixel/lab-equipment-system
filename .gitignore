@@ -24,6 +24,12 @@ yarn-debug.log*
 .DS_Store
 Thumbs.db
 
+# Local academic reports and SonarCloud visual evidence
+*.doc
+*.docx
+docs/sonarqube/evidencias/
+docs/sonarqube/issues-*.json
+
 # Testing
 coverage/
 */coverage/

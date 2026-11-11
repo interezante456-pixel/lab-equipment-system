@@ -41,7 +41,7 @@ export const DispatchReturns: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchActiveLoans();
+    void fetchActiveLoans();
   }, []);
 
   // Despacho: Entrega física al alumno
@@ -49,7 +49,7 @@ export const DispatchReturns: React.FC = () => {
     try {
       await api.patch(`/returns-penalties/dispatch/${res.id}`);
       setActionAlert({ message: `Equipo ${res.equipment?.name} entregado a ${res.user?.fullName}. Estado: PRESTADO.` });
-      fetchActiveLoans();
+      void fetchActiveLoans();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al despachar el equipo');
     }
@@ -68,7 +68,7 @@ export const DispatchReturns: React.FC = () => {
         setActionAlert({ message, isLate: false });
       }
 
-      fetchActiveLoans();
+      void fetchActiveLoans();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al registrar la devolución');
     }

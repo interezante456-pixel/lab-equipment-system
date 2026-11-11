@@ -103,16 +103,16 @@ export const QRScannerModal: React.FC<QRScannerModalProps> = ({
         ) : (
           <form onSubmit={handleManualSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label htmlFor="manual-qr-code" className="block text-xs font-medium text-slate-300 mb-1.5">
                 Código de Estudiante (N0XXXXXXXX) o Código de Equipo (LAB-XXX)
               </label>
               <div className="relative">
                 <input
+                  id="manual-qr-code"
                   type="text"
                   value={manualCode}
                   onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                   placeholder="Ej: N00123456 o LAB-COMP-001"
-                  autoFocus
                   className="w-full px-4 py-3 bg-slate-800/80 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono"
                 />
                 <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
